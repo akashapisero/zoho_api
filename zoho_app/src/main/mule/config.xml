@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="27303111-9351-489a-87aa-def6fa88bc47" >
+		<http:request-connection protocol="HTTPS" host="accounts.zoho.com" />
+	</http:request-config>
+	<http:request-config name="Create_meeting_request" doc:name="HTTP Request configuration" doc:id="3bf92df7-d1e4-4669-a58f-8c29de041362" >
+		<http:request-connection host="meeting.zoho.com" protocol="HTTPS"/>
+	</http:request-config>
+</mule>

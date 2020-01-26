@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get_authToken_flow" doc:id="0221a4c2-1b42-4080-9246-fec4987d2417" >
+		<set-variable value="attributes.queryParam.email" doc:name="email" doc:id="8ae08cb6-3b25-45bf-9cef-7feb1351f8c0" variableName="email"/>
+		<set-variable value="attributes.queryParam.password" doc:name="password" doc:id="a60333ce-eb12-4f4c-abe5-f9eca74221e2" variableName="password"/>
+		<http:request method="POST" doc:name="Authtoken Request" doc:id="53ba33c8-6b29-46ec-b644-43f519bf577e" config-ref="HTTP_Request_configuration" path="/apiauthtoken/nb/create">
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	"SCOPE" : "ZohoMeeting/meetingapi",
+	"EMAIL_ID" : vars.email,
+	"PASSWORD" : vars.password
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="0fcf4d6d-5c8a-4667-a8cc-314cff15a22b" message="#[payload]"/>
+	</flow>
+	<flow name="meeting_details_flow" doc:id="e9543a85-ac94-47f8-9769-743a5ee0172b" >
+		<http:request method="POST" doc:name="meeting_list" doc:id="28e1acdd-465d-4d35-ba68-c53db6d7d175" config-ref="Create_meeting_request" path="/api/private/json/meetings/getMeetingList">
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	"apikey" : "f9c79deac595792b16fff8966e5aa145",
+	"authtoken" : "70b01d456da7b7c9c1d228494259125e"
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="e4cbabfc-3c2a-48d3-bad7-d8410fc1b0c5" message="#[payload]" />
+	</flow>
+	<flow name="invite_Flow" doc:id="a868c404-8e83-44bf-918f-9588ff8e1ba4" >
+		<http:request method="POST" doc:name="Invite" doc:id="0d36f106-4a4d-4848-8349-61f5566a22ee" config-ref="Create_meeting_request" path="/api/private/json/meetings/inviteParticipant">
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	"apikey" : "f9c79deac595792b16fff8966e5aa145",
+	"authtoken" : "70b01d456da7b7c9c1d228494259125e",
+	"meetingKey" : "1042370830",
+	"inviteeMailId" : "akashshewale@gmail.com,jaykumar.kate@apisero.com"
+}]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="f0c9982b-5cb5-42b5-bc34-1284efad1e6d" message="#[payload]"/>
+	</flow>
+	<flow name="create_meeting_flow" doc:id="868cc8b6-9832-403c-85e5-48d11a2a2cb5" >
+		<http:request method="POST" doc:name="Create meeting Request" doc:id="9d7123dc-dd63-4ab2-a228-a64c247d1c77" config-ref="Create_meeting_request" path="/api/private/json/meetings/createMeeting">
+			<http:query-params ><![CDATA[#[output application/java
+---
+{
+	"apikey" : "f9c79deac595792b16fff8966e5aa145",
+	"authtoken" : "70b01d456da7b7c9c1d228494259125e",
+	"topic" : "Created",
+	"participants" : "akashshewale@gmail.com"
+}]]]></http:query-params>
+
+		</http:request>
+		<logger level="INFO" doc:name="Logger" doc:id="1b93e72a-74ba-4d97-9acc-f23b02b41c86" message="#[payload]" />
+	</flow>
+</mule>
